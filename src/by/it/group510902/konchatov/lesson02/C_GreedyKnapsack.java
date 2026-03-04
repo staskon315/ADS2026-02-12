@@ -15,6 +15,8 @@ package by.it.group510902.konchatov.lesson02;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class C_GreedyKnapsack {
@@ -44,6 +46,30 @@ public class C_GreedyKnapsack {
         //итогом является максимально воможная стоимость вещей в рюкзаке
         //вещи можно резать на кусочки (непрерывный рюкзак)
         double result = 0;
+
+        Arrays.sort(items,new Comparator<Item>(){
+            public int compare( Item q ,Item w){
+                return Double.compare( (w.cost/w.weight),(q.cost/q.weight));
+            }
+        });
+
+
+        int weight = W;
+        
+        for (Item item : items) {
+            if (weight <= 0) break; 
+            if (item.weight <= weight) {
+                result += item.cost;
+                weight -= item.weight;
+            } 
+            else {
+
+                double q = (double) weight / item.weight;
+                double partCost = item.cost * q;
+                result += partCost;
+                weight = 0;
+            }
+        }
         //тут реализуйте алгоритм сбора рюкзака
         //будет особенно хорошо, если с собственной сортировкой
         //кроме того, можете описать свой компаратор в классе Item
@@ -63,7 +89,6 @@ public class C_GreedyKnapsack {
             this.cost = cost;
             this.weight = weight;
         }
-
         @Override
         public String toString() {
             return "Item{" +
